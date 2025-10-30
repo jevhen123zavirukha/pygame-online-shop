@@ -33,7 +33,7 @@ def add_to_cart(product):
         cart[product["name"]]["quantity"] += 1
     else:
         cart[product["name"]] = {"price": product["price"], "quantity": 1}
-        # func update cart view
+        update_cart_view()
 
 
 def change_quantity(event):
@@ -52,7 +52,26 @@ def change_quantity(event):
 
     if new_quantity is not None:
         cart[product_name]["quantity"] = new_quantity
-        # func update cart view
+        update_cart_view()
+
+
+def update_cart_view():
+    """
+    Update the Treeview that displays the cart.
+    Clears existing items and reinserts all items in cart with updated quantities and total prices.
+    Also updates the total price label.
+    """
+    # Clear current view
+    for item in cart_tree.get_children():
+        cart_tree.delete(item)
+
+    total_price = 0
+    # Insert each product in the cart into the Treeview
+    for product_name, details in cart.items():
+        cart_tree.insert("", "end", values=(product_name, details["quantity"], details["price"] * details["quantity"]))
+        total_price += details["price"] * details["quantity"]
+
+    total_price_label.config(text=f"Total price: {total_price} USD")
 
 
 # -----------------------------
@@ -101,7 +120,13 @@ cart_tree.column("Price", width=100, anchor="center")
 cart_tree.pack(pady=5)
 
 
+# Total price label
+total_price_label = tk.Label(root, text="Total price: 0 USD", font=("Arial", 14), pady=10)
+total_price_label.pack()
 
+# Buttons for cart actions
+button_frame = tk.Frame(root)
+button_frame.pack(pady=10)
 
 # Start the GUI event loop
 root.mainloop()
