@@ -33,13 +33,39 @@ def add_to_cart(product):
         cart[product["name"]]["quantity"] += 1
     else:
         cart[product["name"]] = {"price": product["price"], "quantity": 1}
-        # func
+        # func update cart view
+
+
+def change_quantity(event):
+    """
+    Prompt the user to change the quantity of a selected cart item.
+
+    :param event: tkinter event object (not used directly here)
+    """
+    selected_item = cart_tree.selection()
+    if not selected_item:
+        return
+
+    product_name = cart_tree.item(selected_item, "values")[0]
+    # Ask user for new quantity
+    new_quantity = simpledialog.askinteger("Change Quantity", f"Enter new quantity for {product_name}:", minvalue=1)
+
+    if new_quantity is not None:
+        cart[product_name]["quantity"] = new_quantity
+        # func update cart view
 
 
 # -----------------------------
 # GUI SETUP
 # -----------------------------
 root = tk.Tk()
+
+# Title label
+title = tk.Label(root, text="Welcome to our Online Shop!", font=("Arial", 18, "bold"), pady=10, fg="white", bg="blue")
+title.pack(fill=tk.X)
+
+root.title("Online Shop")
+root.geometry("650x600")
 
 # Frame for products
 product_frame = tk.Frame(root, pady=10)
@@ -60,12 +86,22 @@ for idx, product in enumerate(products):
     add_button.grid(row=idx + 1, column=2, padx=10)
 
 
-# Title label
-title = tk.Label(root, text="Welcome to our Online Shop!", font=("Arial", 18, "bold"), pady=10, fg="white", bg="blue")
-title.pack(fill=tk.X)
+# Cart label
+cart_label = tk.Label(root, text="Your Cart:", font=("Arial", 14), pady=10)
+cart_label.pack()
 
-root.title("Online Shop")
-root.geometry("650x600")
+# Treeview for cart
+cart_tree = ttk.Treeview(root, columns=("Product", "Quantity", "Price"), show="headings", height=8)
+cart_tree.heading("Product", text="Product")
+cart_tree.heading("Quantity", text="Quantity")
+cart_tree.heading("Price", text="Price")
+cart_tree.column("Product", width=200)
+cart_tree.column("Quantity", width=100, anchor="center")
+cart_tree.column("Price", width=100, anchor="center")
+cart_tree.pack(pady=5)
+
+
+
 
 # Start the GUI event loop
 root.mainloop()
