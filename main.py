@@ -21,7 +21,7 @@ root = tk.Tk()
 root.title("Online Shop")
 root.geometry("650x600")
 
-# Title label
+# Title labelgit
 title = tk.Label(root, text="Welcome to our Online Shop!", font=("Arial", 18, "bold"), pady=10, fg="white", bg="blue")
 title.pack(fill=tk.X)
 
